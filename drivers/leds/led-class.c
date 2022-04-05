@@ -324,17 +324,12 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
 	up_write(&led_cdev->trigger_lock);
 #endif
 
-	led_cdev->flags |= LED_UNREGISTERING;
-
 	/* Stop blinking */
 	led_stop_software_blink(led_cdev);
 
 	led_set_brightness(led_cdev, LED_OFF);
 
 	flush_work(&led_cdev->set_brightness_work);
-
-	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED)
-		led_remove_brightness_hw_changed(led_cdev);
 
 	device_unregister(led_cdev->dev);
 
